@@ -134,6 +134,13 @@ func TestMemory(t *testing.T) {
 	fmt.Printf("bs5读取的数据:%v\n", string(bs5))
 }
 
+func TestAbsPath(t *testing.T) {
+	path, _ := AbsPath("./zfiles.go")
+	fmt.Println(path)  // c:\src\zfile\zfiles.go
+	folder, _ := AbsPath("../zfile")
+	fmt.Println(folder) //c:\src\zfile
+}
+
 // import (
 // 	. "gopkg.in/src-d/go-billy.v4"
 

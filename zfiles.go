@@ -6,6 +6,8 @@ package zfile
 import (
 	"bufio"
 	"fmt"
+	"github.com/kuaileniu/zstring"
+	"go.uber.org/zap"
 	"io"
 	"io/ioutil"
 	"math"
@@ -13,8 +15,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"github.com/kuaileniu/zstring"
-	"go.uber.org/zap"
 )
 
 // https://github.com/yudeguang/file/blob/master/file.go
@@ -112,6 +112,12 @@ func CreateFolder(dir string) (err error) {
 		return err
 	}
 	return nil
+}
+
+// 根据相对路径获取绝对路径
+func AbsPath(reletivePath string) (absPath string,err error) {
+	absPath,err=filepath.Abs(reletivePath)
+	return
 }
 
 // 按源路径的层级不变copy
