@@ -136,9 +136,19 @@ func TestMemory(t *testing.T) {
 
 func TestAbsPath(t *testing.T) {
 	path, _ := AbsPath("./zfiles.go")
-	fmt.Println(path)  // c:\src\zfile\zfiles.go
+	fmt.Println(path) // c:\src\zfile\zfiles.go
 	folder, _ := AbsPath("../zfile")
 	fmt.Println(folder) //c:\src\zfile
+}
+
+func TestReadFileLines(t *testing.T) {
+	lines, err := ReadFileLines("./zfiles.go")
+	if err != nil {
+		fmt.Printf("%v", err)
+	}
+	for index, line := range lines {
+		fmt.Println(index, line)
+	}
 }
 
 // import (

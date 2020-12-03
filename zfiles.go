@@ -115,8 +115,24 @@ func CreateFolder(dir string) (err error) {
 }
 
 // 根据相对路径获取绝对路径
-func AbsPath(reletivePath string) (absPath string,err error) {
-	absPath,err=filepath.Abs(reletivePath)
+func AbsPath(reletivePath string) (absPath string, err error) {
+	absPath, err = filepath.Abs(reletivePath)
+	return
+}
+
+/**
+* 读取文件中的行
+* return 文件中的行
+**/
+func ReadFileLines(file string) (lines []string, err error) {
+	data, e := ioutil.ReadFile(file)
+	if e != nil {
+		return nil, e
+	}
+	for _, line := range strings.Split(string(data), "\n") {
+		// fmt.Println(line)
+		lines = append(lines, line)
+	}
 	return
 }
 
