@@ -120,10 +120,9 @@ func AbsPath(reletivePath string) (absPath string, err error) {
 	return
 }
 
-/**
-* 读取文件中的行
-* return 文件中的行
-**/
+// 读取文件中的行
+// file 可为绝对路径，可为相对路径
+// return 文件中的行
 func ReadFileLines(file string) (lines []string, err error) {
 	data, e := ioutil.ReadFile(file)
 	if e != nil {
