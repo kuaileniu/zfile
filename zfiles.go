@@ -126,7 +126,7 @@ func AbsPath(reletivePath string) (absPath string, err error) {
 func ReadFile(file string) (context string,err error){
 	data, e := ioutil.ReadFile(file)
 	if e != nil {
-		return nil, e
+		return "", e
 	}
 	return string(data),nil
 }
