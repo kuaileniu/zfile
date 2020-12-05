@@ -123,12 +123,12 @@ func AbsPath(reletivePath string) (absPath string, err error) {
 //读取文本文件中内容
 // file 可为绝对路径，可为相对路径
 // return 文本文件内容
-func ReadFile(file string) (context string,err error){
+func ReadFile(file string) (context string, err error) {
 	data, e := ioutil.ReadFile(file)
 	if e != nil {
 		return "", e
 	}
-	return string(data),nil
+	return string(data), nil
 }
 
 // 读取文本文件中的行
@@ -178,6 +178,11 @@ func CopyFolder(srcAbsDir string, targetAbsDir string, copySubfolder ...bool) {
 			CopyFolder(srcAbsDir+string(os.PathSeparator)+subfolder, targetAbsDir+string(os.PathSeparator)+subfolder, copySubfolder...)
 		}
 	}
+}
+
+func GetFileName(filePathName string) (dir, fileName string) {
+	dir, fileName = filepath.Split(filePathName)
+	return
 }
 
 // 判断给定文件名是否是一个目录
