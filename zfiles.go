@@ -125,6 +125,7 @@ func AbsPath(reletivePath string) (absPath string, err error) {
 // return 文本文件内容
 func ReadFile(file string) (context string, err error) {
 	data, e := ioutil.ReadFile(file)
+	// data,e := os.ReadFile(absolutePath)
 	if e != nil {
 		return "", e
 	}
