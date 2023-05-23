@@ -54,6 +54,7 @@ func WriteAppend(path string, b []byte) error {
 
 //覆盖已有内容重新写入
 // 如果已经存在则打开文件，如果之前不存在则创建文件，然后覆盖已有内容重新写入
+// ("../build/a.xml",[]byte(""))
 func ReWriteFile(relitivePathAndFileName string, b []byte) error {
 	file, err := os.Open(relitivePathAndFileName)
 	defer file.Close()
