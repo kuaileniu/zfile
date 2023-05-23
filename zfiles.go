@@ -17,20 +17,44 @@ import (
 	"strings"
 )
 
+// 跳往指定的相对路径，如果不存在则创建, 返回跳转后的绝对路径
+// ("../src-temp2")
+// ("c:/src-temp2")
+func GoToPath(relitiveOrAbsPath string) (absPath string, err error) {
+	err = os.Chdir(relitiveOrAbsPath)
+	if err != nil {
+		if strings.Contains(err.Error(), "find the file") {
+			targetPath, e := filepath.Abs(relitiveOrAbsPath)
+			if e != nil {
+				return "", e
+			}
+			err = os.MkdirAll(targetPath, 0777)
+			if err != nil {
+				return "", nil
+			}
+		} else {
+			return "", err
+		}
+	}
+
+	absPath, err = os.Getwd()
+	return
+}
+
 // https://github.com/yudeguang/file/blob/master/file.go
-//检察文件是否允许读
+// 检察文件是否允许读
 func AllowRead(path string) bool {
 	_, err := os.OpenFile(path, os.O_RDONLY, 0666)
 	return err == nil
 }
 
-//检察文件是否允许写
+// 检察文件是否允许写
 func AllowWrite(path string) bool {
 	_, err := os.OpenFile(path, os.O_WRONLY, 0666)
 	return err == nil
 }
 
-//打开指定文件，并从指定位置写入数据
+// 打开指定文件，并从指定位置写入数据
 func WriteAt(path string, b []byte, off int64) error {
 	file, err := os.OpenFile(path, os.O_WRONLY, 0666)
 	if err != nil {
@@ -41,7 +65,7 @@ func WriteAt(path string, b []byte, off int64) error {
 	return err
 }
 
-//打开指定文件,并在文件末尾写入数据
+// 打开指定文件,并在文件末尾写入数据
 func WriteAppend(path string, b []byte) error {
 	file, err := os.OpenFile(path, os.O_APPEND, 0666)
 	if err != nil {
@@ -52,7 +76,27 @@ func WriteAppend(path string, b []byte) error {
 	return err
 }
 
-//覆盖已有内容重新写入
+// 新建文件，若有重名文件则删除重建
+// ("../build/a.xml") 或  ("./build/a.xml") 或  ("build/a.xml")
+func ReCreateFile(relitivePathAndFileName string) (absPathFileName string, err error) {
+	file, err := os.Open(relitivePathAndFileName)
+	defer file.Close()
+	file, err = os.Create(relitivePathAndFileName)
+	if err != nil {
+		err = os.MkdirAll(filepath.Dir(relitivePathAndFileName), 0777)
+		if err != nil {
+			return "", err
+		}
+		file, err = os.Create(relitivePathAndFileName)
+		if err != nil {
+			return "", err
+		}
+	}
+	absPathFileName, _ = AbsPath(relitivePathAndFileName)
+	return absPathFileName, nil
+}
+
+// 覆盖已有内容重新写入
 // 如果已经存在则打开文件，如果之前不存在则创建文件，然后覆盖已有内容重新写入
 // ("../build/a.xml",[]byte(""))
 func ReWriteFile(relitivePathAndFileName string, b []byte) error {
@@ -73,8 +117,8 @@ func ReWriteFile(relitivePathAndFileName string, b []byte) error {
 	return err
 }
 
-//复制文件，目标文件所在目录不存在，则创建目录后再复制
-//Copy(`d:\test\hello.txt`,`c:\test\hello.txt`)
+// 复制文件，目标文件所在目录不存在，则创建目录后再复制
+// Copy(`d:\test\hello.txt`,`c:\test\hello.txt`)
 func Copy(dstFileName, srcFileName string) (w int64, err error) {
 	//打开源文件
 	srcFile, err := os.Open(srcFileName)
@@ -121,7 +165,7 @@ func AbsPath(reletivePath string) (absPath string, err error) {
 	return
 }
 
-//读取文本文件中内容
+// 读取文本文件中内容
 // file 可为绝对路径，可为相对路径
 // return 文本文件内容
 func ReadFile(file string) (context string, err error) {
@@ -218,7 +262,7 @@ func CheckFileIsExist(filepath string) bool {
 	return exist
 }
 
-//获得文件的修改时间
+// 获得文件的修改时间
 func FileModTime(path string) (int64, error) {
 	f, err := os.Stat(path)
 	if err != nil {
@@ -227,7 +271,7 @@ func FileModTime(path string) (int64, error) {
 	return f.ModTime().Unix(), nil
 }
 
-//返回文件的大小
+// 返回文件的大小
 func FileSize(path string) (int64, error) {
 	f, err := os.Stat(path)
 	if err != nil {
@@ -236,7 +280,7 @@ func FileSize(path string) (int64, error) {
 	return f.Size(), nil
 }
 
-//遍历目录及下级目录，查找符合后缀文件,如果suffix为空，则查找所有文件
+// 遍历目录及下级目录，查找符合后缀文件,如果suffix为空，则查找所有文件
 func GetFileListBySuffix(dirPath, suffix string) (files []string, err error) {
 	if !IsDir(dirPath) {
 		return nil, fmt.Errorf("given path does not exist: %s", dirPath)
@@ -258,7 +302,7 @@ func GetFileListBySuffix(dirPath, suffix string) (files []string, err error) {
 	return files, err
 }
 
-//遍历指定目录下的所有文件，查找符合后缀文件,不进入下一级目录搜索
+// 遍历指定目录下的所有文件，查找符合后缀文件,不进入下一级目录搜索
 func GetFileListJustCurrentDirBySuffix(dirPath string, suffix string) (files []string, err error) {
 	if !IsDir(dirPath) {
 		return nil, fmt.Errorf("given path does not exist: %s", dirPath)
@@ -281,7 +325,7 @@ func GetFileListJustCurrentDirBySuffix(dirPath string, suffix string) (files []s
 	return files, nil
 }
 
-//把文件大小转换成人更加容易看懂的文本
+// 把文件大小转换成人更加容易看懂的文本
 // HumaneFileSize calculates the file size and generate user-friendly string.
 func HumaneFileSize(s uint64) string {
 	logn := func(n, b float64) float64 {
@@ -340,8 +384,8 @@ func FromRelativePath(fileOrPath string, relativePath string) (fp string, err er
 	return
 }
 
-// 	file, _ :=zfiles.FromCallMethodRelativePath("iris.csv",1)
-// 	file, _ :=zfiles.FromCallMethodRelativePath("iris.csv")
+// file, _ :=zfiles.FromCallMethodRelativePath("iris.csv",1)
+// file, _ :=zfiles.FromCallMethodRelativePath("iris.csv")
 func FromCallMethodRelativePath(fileName string, skipOne ...int) (path string, err error) {
 	var filename string
 	if skipOne == nil {

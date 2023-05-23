@@ -53,3 +53,4 @@ sh.exe.stackdump
 rice-box.go
 .DS_Store
 go.sum
+.vscode/

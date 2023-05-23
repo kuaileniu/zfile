@@ -747,3 +747,24 @@ func TestReWriteFile(t *testing.T) {
 	ReWriteFile("target/models/a.ctxt", []byte("hello"))
 	// ReWriteFile("models/a.ctxt")
 }
+
+func TestReCreateFile(t *testing.T) {
+	filePathName, _ := ReCreateFile("target/models/x.ctxt")
+	fmt.Println(filePathName)
+}
+
+func TestGoToForRelitivePath(t *testing.T) {
+	absPath, err := GoToPath("../src_test233")
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+	fmt.Println(absPath)
+}
+
+func TestGoToForAbsPath(t *testing.T) {
+	absPath, err := GoToPath("c:/src-temp2")
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+	fmt.Println(absPath)
+}
