@@ -12,8 +12,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/src-d/go-billy.v4/memfs"
-	// https://github.com/src-d/go-billy/tree/v4.3.2/memfs
-	// "gopkg.in/src-d/go-billy.v4/memfs"
 )
 
 func TestMain(m *testing.M) {
