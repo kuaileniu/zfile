@@ -182,9 +182,9 @@ func ReadFile(file string) (context string, err error) {
 // file 可为绝对路径，可为相对路径
 // return 文本文件内容
 func ReadFileByte(filePath string) ([]byte,error) {
-	data,e := os.ReadFile(absolutePath)
+	data,e := os.ReadFile(filePath)
 	if e != nil {
-		return "", e
+		return nil, e
 	}
 	return data, nil
 }
