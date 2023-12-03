@@ -177,6 +177,18 @@ func ReadFile(file string) (context string, err error) {
 	return string(data), nil
 }
 
+
+// 读取文本文件中内容为字节
+// file 可为绝对路径，可为相对路径
+// return 文本文件内容
+func ReadFileByte(filePath string) ([]byte,error) {
+	data,e := os.ReadFile(absolutePath)
+	if e != nil {
+		return "", e
+	}
+	return data, nil
+}
+
 // 读取文本文件中的行
 // file 可为绝对路径，可为相对路径
 // return 文件中的行列表
@@ -416,3 +428,5 @@ func getCurrentDirectory() string {
 	}
 	return strings.Replace(dir, "\\", "/", -1)
 }
+
+func 
